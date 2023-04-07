@@ -46,7 +46,11 @@ export async function getLekko(
       githubToken.length
     }: ${githubToken.slice(0, 5)}`
   );
-  const downloadPath = await tc.downloadTool(downloadURL);
+  const downloadPath = await tc.downloadTool(
+    downloadURL,
+    undefined,
+    githubToken
+  );
   core.info(
     `Successfully downloaded lekko version "${version}" from ${downloadURL}`
   );
