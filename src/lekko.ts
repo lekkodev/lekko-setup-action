@@ -41,7 +41,11 @@ export async function getLekko(
   }
 
   let cacheDir = "";
-  core.info(`Downloading lekko version "${version}" from ${downloadURL} using token of length ${githubToken.length}: ${githubToken.slice(0,5)}`);
+  core.info(
+    `Downloading lekko version "${version}" from ${downloadURL} using token of length ${
+      githubToken.length
+    }: ${githubToken.slice(0, 5)}`
+  );
   const downloadPath = await tc.downloadTool(downloadURL);
   core.info(
     `Successfully downloaded lekko version "${version}" from ${downloadURL}`
