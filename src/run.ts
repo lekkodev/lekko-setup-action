@@ -15,8 +15,6 @@
 import * as core from "@actions/core";
 import * as io from "@actions/io";
 import cp from "child_process";
-import * as os from "os";
-import * as path from "path";
 import { Error, isError } from "./error";
 import { getLekko } from "./lekko";
 
@@ -65,11 +63,8 @@ async function runSetup(): Promise<null | Error> {
     `Adding lekko binary to PATH. This is the install directory: ${installDir}`
   );
   let binaryPath = "";
-  if (os.platform() === "win32") {
-    core.addPath(installDir);
-  } else {
-    core.addPath(path.join(installDir, "bin"));
-  }
+
+  core.addPath(installDir);
   binaryPath = await io.which("lekko", true);
   if (binaryPath === "") {
     return {

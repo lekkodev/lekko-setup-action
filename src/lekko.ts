@@ -17,6 +17,7 @@ import * as tc from "@actions/tool-cache";
 import { Octokit } from "@octokit/core";
 import { HttpsProxyAgent } from "https-proxy-agent";
 import * as os from "os";
+import * as path from "path";
 import { Error, isError } from "./error";
 
 // versionPrefix is used in Github release names, and can
@@ -40,13 +41,9 @@ export async function getLekko(
   }
 
   let cacheDir = "";
-  core.info(
-    `Downloading lekko version "${version}" from ${downloadURL} using token of length ${
-      githubToken.length
-    }: ${githubToken.slice(0, 5)}`
-  );
+  core.info(`Downloading lekko version "${version}" from ${downloadURL}`);
   const downloadPath = await tc.downloadTool(
-    downloadURL,
+    downloadURL.url,
     undefined,
     undefined,
     {
@@ -56,7 +53,7 @@ export async function getLekko(
     }
   );
   core.info(
-    `Successfully downloaded lekko version "${version}" from ${downloadURL}`
+    `Successfully downloaded lekko version "${version}" from ${downloadURL} onto path ${downloadPath}`
   );
 
   core.info("Extracting lekko...");
@@ -65,18 +62,24 @@ export async function getLekko(
   const extractPath = await tc.extractTar(downloadPath);
   core.info(`Successfully extracted lekko to ${extractPath}`);
 
-  core.info("Adding lekko to the cache...");
-  cacheDir = await tc.cacheDir(extractPath, "lekko", version, os.arch());
+  const dirToCache = path.join(downloadPath, downloadURL.assetTitle);
+  core.info(`Adding "${dirToCache}" to the cache...`);
+  cacheDir = await tc.cacheDir(dirToCache, "lekko", version, os.arch());
   core.info(`Successfully cached lekko to ${cacheDir}`);
   return cacheDir;
 }
+
+type downloadMeta = {
+  url: string;
+  assetTitle: string;
+};
 
 // getDownloadURL resolves Lekko's Github download URL for the
 // current architecture and platform.
 async function getDownloadURL(
   version: string,
   githubToken: string
-): Promise<string | Error> {
+): Promise<downloadMeta | Error> {
   let architecture = "";
   switch (os.arch()) {
     // The available architectures can be found at:
@@ -107,7 +110,8 @@ async function getDownloadURL(
         message: `The "${os.platform()}" platform is not supported with a Lekko release.`,
       };
   }
-  const assetName = `lekko_${platform}_${architecture}.tar.gz`;
+  const assetTitle = `lekko_${platform}_${architecture}`;
+  const assetName = `${assetTitle}.tar.gz`;
   const requestAgent = process.env.http_proxy
     ? new HttpsProxyAgent(process.env.http_proxy)
     : undefined;
@@ -128,7 +132,10 @@ async function getDownloadURL(
     );
     for (const asset of releases[0].assets) {
       if (assetName === asset.name) {
-        return asset.url;
+        return {
+          url: asset.url,
+          assetTitle: assetTitle,
+        };
       }
     }
     return {
@@ -146,7 +153,10 @@ async function getDownloadURL(
   );
   for (const asset of release.assets) {
     if (assetName === asset.name) {
-      return asset.url;
+      return {
+        url: asset.url,
+        assetTitle: assetTitle,
+      };
     }
   }
   return {
