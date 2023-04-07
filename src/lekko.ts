@@ -17,7 +17,6 @@ import * as tc from "@actions/tool-cache";
 import { Octokit } from "@octokit/core";
 import { HttpsProxyAgent } from "https-proxy-agent";
 import * as os from "os";
-import * as path from "path";
 import { Error, isError } from "./error";
 
 // versionPrefix is used in Github release names, and can
@@ -67,12 +66,7 @@ export async function getLekko(
   core.info(`Successfully extracted lekko to ${extractPath}`);
 
   core.info("Adding lekko to the cache...");
-  cacheDir = await tc.cacheDir(
-    path.join(extractPath, "lekko"),
-    "lekko",
-    version,
-    os.arch()
-  );
+  cacheDir = await tc.cacheDir(extractPath, "lekko", version, os.arch());
   core.info(`Successfully cached lekko to ${cacheDir}`);
   return cacheDir;
 }
