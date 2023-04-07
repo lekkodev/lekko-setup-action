@@ -49,9 +49,11 @@ export async function getLekko(
   const downloadPath = await tc.downloadTool(
     downloadURL,
     undefined,
-    githubToken,
+    undefined,
     {
       Accept: "application/octet-stream",
+      Authorization: "Bearer " + githubToken,
+      "X-GitHub-Api-Version": "2022-11-28",
     }
   );
   core.info(
