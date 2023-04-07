@@ -49,7 +49,10 @@ export async function getLekko(
   const downloadPath = await tc.downloadTool(
     downloadURL,
     undefined,
-    githubToken
+    githubToken,
+    {
+      Accept: "application/octet-stream",
+    }
   );
   core.info(
     `Successfully downloaded lekko version "${version}" from ${downloadURL}`
