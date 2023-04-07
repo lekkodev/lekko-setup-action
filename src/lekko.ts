@@ -129,7 +129,7 @@ async function getDownloadURL(
     );
     for (const asset of releases[0].assets) {
       if (assetName === asset.name) {
-        return asset.browser_download_url;
+        return asset.url;
       }
     }
     return {
@@ -147,7 +147,7 @@ async function getDownloadURL(
   );
   for (const asset of release.assets) {
     if (assetName === asset.name) {
-      return asset.browser_download_url;
+      return asset.url;
     }
   }
   return {
