@@ -61,7 +61,9 @@ async function runSetup(): Promise<null | Error> {
     return installDir;
   }
 
-  core.info("Adding lekko binary to PATH");
+  core.info(
+    `Adding lekko binary to PATH. This is the install directory: ${installDir}`
+  );
   let binaryPath = "";
   if (os.platform() === "win32") {
     core.addPath(installDir);
