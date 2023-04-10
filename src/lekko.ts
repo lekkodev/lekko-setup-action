@@ -15,6 +15,7 @@
 import * as core from "@actions/core";
 import * as tc from "@actions/tool-cache";
 import { Octokit } from "@octokit/core";
+import * as fs from "fs";
 import { HttpsProxyAgent } from "https-proxy-agent";
 import * as os from "os";
 import * as path from "path";
@@ -61,7 +62,8 @@ export async function getLekko(
   // update this code path to extract .exe appropriately
   const extractPath = await tc.extractTar(downloadPath);
   core.info(`Successfully extracted lekko to ${extractPath}`);
-
+  const results = fs.readdirSync(extractPath);
+  core.info(`list of items in directory: ${results}`);
   const dirToCache = path.join(extractPath, downloadURL.assetTitle);
   core.info(`Adding "${dirToCache}" to the cache...`);
   cacheDir = await tc.cacheDir(dirToCache, "lekko", version, os.arch());
