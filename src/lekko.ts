@@ -18,7 +18,6 @@ import { Octokit } from "@octokit/core";
 import * as fs from "fs";
 import { HttpsProxyAgent } from "https-proxy-agent";
 import * as os from "os";
-import * as path from "path";
 import { Error, isError } from "./error";
 
 // versionPrefix is used in Github release names, and can
@@ -64,7 +63,7 @@ export async function getLekko(
   core.info(`Successfully extracted lekko to ${extractPath}`);
   const results = fs.readdirSync(extractPath);
   core.info(`list of items in directory: ${results}`);
-  const dirToCache = path.join(extractPath, downloadURL.assetTitle);
+  const dirToCache = extractPath;
   core.info(`Adding "${dirToCache}" to the cache...`);
   cacheDir = await tc.cacheDir(dirToCache, "lekko", version, os.arch());
   core.info(`Successfully cached lekko to ${cacheDir}`);
