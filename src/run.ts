@@ -59,9 +59,7 @@ async function runSetup(): Promise<null | Error> {
     return installDir;
   }
 
-  core.info(
-    `Adding lekko binary to PATH. This is the install directory: ${installDir}`
-  );
+  core.info(`Adding lekko binary to PATH.`);
   let binaryPath = "";
 
   core.addPath(installDir);
@@ -72,7 +70,7 @@ async function runSetup(): Promise<null | Error> {
     };
   }
 
-  core.info(`Successfully setup lekko version ${version}`);
+  core.info(`Successfully set up lekko version ${version}`);
   core.info(cp.execSync(`${binaryPath} --version`).toString());
   return null;
 }

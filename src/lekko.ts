@@ -15,7 +15,6 @@
 import * as core from "@actions/core";
 import * as tc from "@actions/tool-cache";
 import { Octokit } from "@octokit/core";
-import * as fs from "fs";
 import { HttpsProxyAgent } from "https-proxy-agent";
 import * as os from "os";
 import { Error, isError } from "./error";
@@ -43,17 +42,17 @@ export async function getLekko(
   let cacheDir = "";
   core.info(`Downloading lekko version "${version}" from ${downloadURL}`);
   const downloadPath = await tc.downloadTool(
-    downloadURL.url,
+    downloadURL,
     undefined,
     undefined,
     {
-      Accept: "application/octet-stream",
+      Accept: "application/octet-stream", // Needed to actually download the binary
       Authorization: "Bearer " + githubToken,
       "X-GitHub-Api-Version": "2022-11-28",
     }
   );
   core.info(
-    `Successfully downloaded lekko version "${version}" from ${downloadURL} onto path ${downloadPath}`
+    `Successfully downloaded lekko version "${version}" onto path ${downloadPath}`
   );
 
   core.info("Extracting lekko...");
@@ -61,26 +60,18 @@ export async function getLekko(
   // update this code path to extract .exe appropriately
   const extractPath = await tc.extractTar(downloadPath);
   core.info(`Successfully extracted lekko to ${extractPath}`);
-  const results = fs.readdirSync(extractPath);
-  core.info(`list of items in directory: ${results}`);
-  const dirToCache = extractPath;
-  core.info(`Adding "${dirToCache}" to the cache...`);
-  cacheDir = await tc.cacheDir(dirToCache, "lekko", version, os.arch());
+  core.info(`Adding "${extractPath}" to the cache...`);
+  cacheDir = await tc.cacheDir(extractPath, "lekko", version, os.arch());
   core.info(`Successfully cached lekko to ${cacheDir}`);
   return cacheDir;
 }
-
-type downloadMeta = {
-  url: string;
-  assetTitle: string;
-};
 
 // getDownloadURL resolves Lekko's Github download URL for the
 // current architecture and platform.
 async function getDownloadURL(
   version: string,
   githubToken: string
-): Promise<downloadMeta | Error> {
+): Promise<string | Error> {
   let architecture = "";
   switch (os.arch()) {
     // The available architectures can be found at:
@@ -111,8 +102,7 @@ async function getDownloadURL(
         message: `The "${os.platform()}" platform is not supported with a Lekko release.`,
       };
   }
-  const assetTitle = `lekko_${platform}_${architecture}`;
-  const assetName = `${assetTitle}.tar.gz`;
+  const assetName = `lekko_${platform}_${architecture}.tar.gz`;
   const requestAgent = process.env.http_proxy
     ? new HttpsProxyAgent(process.env.http_proxy)
     : undefined;
@@ -133,16 +123,14 @@ async function getDownloadURL(
     );
     for (const asset of releases[0].assets) {
       if (assetName === asset.name) {
-        return {
-          url: asset.url,
-          assetTitle: assetTitle,
-        };
+        return asset.url;
       }
     }
     return {
-      message: `Unable to find Lekko version "${version}" for platform "${platform}" and architecture "${architecture}".`,
+      message: `Unable to find latest Lekko version for platform "${platform}" and architecture "${architecture}".`,
     };
   }
+  // look for explicit version
   const tag = releaseTagForVersion(version);
   const { data: release } = await octokit.request(
     "GET /repos/{owner}/{repo}/releases/tags/{tag}",
@@ -154,10 +142,7 @@ async function getDownloadURL(
   );
   for (const asset of release.assets) {
     if (assetName === asset.name) {
-      return {
-        url: asset.url,
-        assetTitle: assetTitle,
-      };
+      return asset.url;
     }
   }
   return {
