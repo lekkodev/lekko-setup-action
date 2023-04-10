@@ -1,0 +1,17 @@
+name: "lekko-setup"
+description: >
+  Install lekko for use in other jobs.
+branding:
+  icon: play
+  color: purple
+inputs:
+  version:
+    description: The version of lekko to set up.
+    required: false
+    default: '0.2.15'
+  github_token:
+    description: The GitHub token to use when making API requests.
+    required: true  # This is required because Lekko's releases are private.
+runs:
+  using: "node16"
+  main: "./dist/main.js"
