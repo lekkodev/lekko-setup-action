@@ -62,7 +62,7 @@ export async function getLekko(
   const extractPath = await tc.extractTar(downloadPath);
   core.info(`Successfully extracted lekko to ${extractPath}`);
 
-  const dirToCache = path.join(downloadPath, downloadURL.assetTitle);
+  const dirToCache = path.join(extractPath, downloadURL.assetTitle);
   core.info(`Adding "${dirToCache}" to the cache...`);
   cacheDir = await tc.cacheDir(dirToCache, "lekko", version, os.arch());
   core.info(`Successfully cached lekko to ${cacheDir}`);
