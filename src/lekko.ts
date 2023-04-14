@@ -16,7 +16,7 @@ import * as core from "@actions/core";
 import * as tc from "@actions/tool-cache";
 import { Octokit } from "@octokit/core";
 import { HttpsProxyAgent } from "https-proxy-agent";
-import fetch from 'node-fetch';
+import fetch from "node-fetch";
 import * as os from "os";
 import { Error, isError } from "./error";
 
@@ -97,16 +97,16 @@ async function getGithubToken(apikey: string): Promise<string | Error> {
       message: `Error getting developer access token: ${resp.statusText}`,
     };
   }
-  
+
   const data = await resp.json();
-  core.info(`Got back data: ${data}`)
-//   if (data.token == undefined || data.token.length == 0) {
-//     return {
-//       message: "No token found in response",
-//     };
-//   }
-//   return data.token;
-    return ''
+  core.info(`Got back data: ${data}`);
+  //   if (data.token == undefined || data.token.length == 0) {
+  //     return {
+  //       message: "No token found in response",
+  //     };
+  //   }
+  //   return data.token;
+  return "";
 }
 
 // getDownloadURL resolves Lekko's Github download URL for the
