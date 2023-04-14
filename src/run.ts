@@ -46,15 +46,17 @@ async function runSetup(): Promise<null | Error> {
       message: "a version was not provided",
     };
   }
-  const githubToken = core.getInput("github_token");
-  if (githubToken === "") {
+  const apikey = core.getInput("apikey");
+  if (apikey === "") {
     return {
-      message: "No github_token supplied, won't be able to download lekko",
+      message: "No apikey supplied, won't be able to download lekko",
     };
   }
 
+  const githubToken = core.getInput("github_token");
+
   core.info(`Setting up Lekko version "${version}"`);
-  const installDir = await getLekko(version, githubToken);
+  const installDir = await getLekko(version, apikey, githubToken);
   if (isError(installDir)) {
     return installDir;
   }
