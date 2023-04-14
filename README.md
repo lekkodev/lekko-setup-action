@@ -29,7 +29,8 @@ You can configure `lekko-setup-action` with these parameters:
 | Parameter      | Description                                        | Default            |
 |:---------------|:---------------------------------------------------|:-------------------|
 | `version`      | The version of [`lekko`][lekko-cli] to install | `v0.2.15` |
-| `github_token` | The GitHub token to use to install [`lekko`][lekko-cli]   |                    |
+| `apikey`      | The Lekko apikey that provides you with access to Lekko developer resources |  |
+| `github_token` | The GitHub token to use to install [`lekko`][lekko-cli]. Deprecated.   |                    |
 
 > These parameters are derived from [`action.yml`](./action.yml). <br>
 #### Version
@@ -69,18 +70,20 @@ steps:
   - run: lekko --version
 ```
 
-#### GitHub token
+#### API key
 
-You must supply a `github_token` input so that the action can access Lekko's private [releases] page.
+You must supply a `apikey` input so that the action can access Lekko's private [releases] page.
 
 ```yaml
 steps:
   - uses: lekkodev/lekko-setup-action@v1
     with:
-      github_token: ${{ github.token }}
+      apikey: ${{ secrets.LEKKO_DEVELOPER_APIKEY }}
 ```
+This key can be made a repository or organization secret. See [Encrypted Secrets][secrets] for more information. 
 
 
 [action]: https://docs.github.com/actions
 [lekko-cli]: https://github.com/lekkodev/cli
 [releases]: https://github.com/lekkodev/cli/releases
+[secrets]: https://docs.github.com/en/actions/security-guides/encrypted-secrets
