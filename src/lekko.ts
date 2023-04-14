@@ -35,12 +35,12 @@ export async function getLekko(
   }
 
   if (apikey.length > 0) {
-    core.info(`Retrieving developer github token for your api key...`)
+    core.info(`Retrieving developer github token for your api key...`);
     const token = await getGithubToken(apikey);
     if (isError(token)) {
-        return token
+      return token;
     }
-    githubToken = token
+    githubToken = token;
   }
 
   core.info(`Resolving the download URL for the current platform...`);
@@ -79,29 +79,30 @@ export async function getLekko(
 // getGithubToken fetches a temporary github token that has credentials
 // to access lekko's private repository to download the appropriate release
 // of the lekko cli.
-async function getGithubToken(
-    apikey: string,
-): Promise<string | Error> {
-    const resp = await fetch('https://web.api.lekko.dev/lekko.backend.v1beta1.DistributionService/GetDeveloperAccessToken', {
-        method: 'POST',
-        headers: {
-            'apikey': apikey,
-            'Content-Type': 'application/json',
-        },
-            body: JSON.stringify({})
-    })
-    if (!resp.ok) {
-        return {
-            message: `Error getting developer access token: ${resp.statusText}`,
-          };
+async function getGithubToken(apikey: string): Promise<string | Error> {
+  const resp = await fetch(
+    "https://web.api.lekko.dev/lekko.backend.v1beta1.DistributionService/GetDeveloperAccessToken",
+    {
+      method: "POST",
+      headers: {
+        apikey: apikey,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({}),
     }
-    const data = await resp.json();
-    if (data.token == undefined || data.token.length == 0) {
-        return {
-            message: 'No token found in response', 
-        }
-    }
-    return data.token
+  );
+  if (!resp.ok) {
+    return {
+      message: `Error getting developer access token: ${resp.statusText}`,
+    };
+  }
+  const data = await resp.json();
+  if (data.token == undefined || data.token.length == 0) {
+    return {
+      message: "No token found in response",
+    };
+  }
+  return data.token;
 }
 
 // getDownloadURL resolves Lekko's Github download URL for the
