@@ -97,13 +97,16 @@ async function getGithubToken(apikey: string): Promise<string | Error> {
       message: `Error getting developer access token: ${resp.statusText}`,
     };
   }
+  
   const data = await resp.json();
-  if (data.token == undefined || data.token.length == 0) {
-    return {
-      message: "No token found in response",
-    };
-  }
-  return data.token;
+  core.info(`Got back data: ${data}`)
+//   if (data.token == undefined || data.token.length == 0) {
+//     return {
+//       message: "No token found in response",
+//     };
+//   }
+//   return data.token;
+    return ''
 }
 
 // getDownloadURL resolves Lekko's Github download URL for the
