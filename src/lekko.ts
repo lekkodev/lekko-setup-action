@@ -16,6 +16,7 @@ import * as core from "@actions/core";
 import * as tc from "@actions/tool-cache";
 import { Octokit } from "@octokit/core";
 import { HttpsProxyAgent } from "https-proxy-agent";
+import fetch from 'node-fetch';
 import * as os from "os";
 import { Error, isError } from "./error";
 
