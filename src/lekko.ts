@@ -99,7 +99,6 @@ async function getGithubToken(apikey: string): Promise<string | Error> {
   }
 
   const data = (await resp.json()) as tokenResp;
-  core.info(`Got back data: ${data} and token ${data.token}`);
   if (data.token == undefined || data.token.length == 0) {
     return {
       message: "No token found in response",
