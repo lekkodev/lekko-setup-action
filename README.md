@@ -34,7 +34,7 @@ You can configure `lekko-setup-action` with these parameters:
 
 > These parameters are derived from [`action.yml`](./action.yml). <br>
 #### Version
-
+test
 If `version` is unspecified, a default version of `lekko` is installed:
 
 ```yaml
