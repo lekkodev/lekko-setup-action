@@ -8,7 +8,7 @@ inputs:
   version:
     description: The version of lekko to set up.
     required: false
-    default: '0.2.17'
+    default: '0.2.25'
   apikey:
     description: Lekko apikey used to access private lekko resources
     required: true # This is required because Lekko's releases are private.
