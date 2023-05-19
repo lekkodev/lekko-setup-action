@@ -14,7 +14,11 @@ inputs:
     required: true # This is required because Lekko's releases are private.
   github_token: 
     description: The GitHub token to use when making API requests. Deprecated.
-    required: false  
+    required: false
+  default_branch:
+    description: The name of the default branch of the config repo
+    required: false
+    default: ${{ github.event.repository.default_branch }}
 runs:
   using: "node16"
   main: "./dist/main.js"

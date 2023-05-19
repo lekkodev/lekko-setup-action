@@ -52,6 +52,7 @@ async function runSetup(): Promise<null | Error> {
       message: "No apikey supplied, won't be able to download lekko",
     };
   }
+  core.exportVariable()
 
   const githubToken = core.getInput("github_token");
 
