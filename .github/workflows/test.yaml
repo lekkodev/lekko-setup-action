@@ -10,3 +10,4 @@ jobs:
           version: 'latest'
           apikey: ${{ secrets.LEKKO_DEVELOPER_APIKEY }}
       - run: lekko --version
+      - run: env

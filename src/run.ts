@@ -52,7 +52,10 @@ async function runSetup(): Promise<null | Error> {
       message: "No apikey supplied, won't be able to download lekko",
     };
   }
-  core.exportVariable()
+  const defaultBranch = core.getInput("default_branch");
+  if (defaultBranch !== "") {
+    core.exportVariable("LEKKO_DEFAULT_BRANCH", defaultBranch);
+  }
 
   const githubToken = core.getInput("github_token");
 
