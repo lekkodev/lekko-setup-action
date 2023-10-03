@@ -28,7 +28,7 @@ You can configure `lekko-setup-action` with these parameters:
 
 | Parameter      | Description                                        | Default            |
 |:---------------|:---------------------------------------------------|:-------------------|
-| `version`      | The version of [`lekko`][lekko-cli] to install | `v0.2.32` |
+| `version`      | The version of [`lekko`][lekko-cli] to install | `v0.3.3` |
 | `apikey`      | The Lekko apikey that provides you with access to Lekko developer resources |  |
 | `github_token` | The GitHub token to use to install [`lekko`][lekko-cli]. Deprecated.   |                    |
 
@@ -50,11 +50,9 @@ Use the `version` parameter to pin to a specific version:
 ```yaml
 steps:
   - uses: actions/checkout@v3
-  # Installs version 0.2.32
   - uses: lekkodev/lekko-setup-action@v1
     with:
-      version: 0.2.32
-  # Should output v0.2.32
+      version: 0.3.3
   - run: lekko --version
 ```
 
